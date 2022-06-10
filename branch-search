@@ -1,0 +1,52 @@
+#!/bin/bash
+
+searchPattern=""
+
+if [ "$1" != "-i" ] && [ "$1" != "-d" ]&& [ "$1" != "-c" ]
+then
+    searchPattern="$1"
+
+    shift;
+fi
+
+delete='false'
+checkout='false'
+
+while getopts i:dc flag
+do
+    case "${flag}" in
+        i) indexes=${OPTARG};;
+        d) delete="true";;
+        c) checkout="true";;
+    esac
+done
+
+branches=($(git branch | grep "$searchPattern" | cut -b 3-))
+filteredBranches=()
+
+
+if [ ! -z "$indexes" ]
+then
+  IFS=',' read -r -a indexes <<< "$indexes"
+
+  for i in "${!branches[@]}"; do 
+    if [[ " ${indexes[@]} " =~ " ${i} " ]]; then
+      filteredBranches+=("${branches[$i]}")
+    fi
+  done
+else
+  filteredBranches=( "${branches[@]}" )
+fi
+
+
+if ${delete};
+then
+  printf "%s\n" "${filteredBranches[@]}" | xargs git branch -D
+elif ${checkout};
+then
+  printf "%s\n" "${filteredBranches[@]}" | xargs git checkout
+else
+  for i in "${!filteredBranches[@]}"; do 
+    printf "%s - %s\n" "$i" "${filteredBranches[$i]}"
+  done
+fi
