@@ -1,0 +1,26 @@
+set t_Co=256
+syntax on
+filetype plugin indent on
+filetype plugin on
+set rnu
+set nu
+set surround
+set autoread
+set incsearch
+let g:netrw_liststyle = 3
+let g:netrw_banner = 0
+let g:netrw_browse_split = 2
+let g:netrw_winsize = 25
+
+" Navigate between splits
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+set multiple-cursors
+map <C-N>  <A-N>
+map <C-P>  <A-P>
+map <C-X>  <A-X>
+map g<C-N> g<A-N>
+
